@@ -1,4 +1,26 @@
-#!/usr/bin/env python3
+#----------Engineering Applications Module - Car Park Stepper Motor Driver Board PCB Test----------#
+#
+#
+#
+#
+#   - Author: Stuart Thomas
+#   - Date: 15/01/2025
+#   - Version: 1.0
+#   - Description: - Program runs tests on the stepper motor driver PCB used in the Edinburgh Napier University Engineering Applications module.
+#                   Tests Performed:
+#                       - Short-circuit/resistance check
+#                       - Power up test
+#                       - Clock peak-to-peak voltage
+#                       - Clock frequency
+#                       - Relay operation check
+#                       - Board functional test
+
+#                   Default instrument 1: AimTTI CPX400DT DC Power Supply
+#                   Default instrument 2: Keysight DSO-X 2004A Oscilloscope
+#                   Default instrument 3: Keysight EDU33212A Function Generator
+#                   Default instrument 4: Keysight 34460A DMM
+
+#                   Hardware setup described during test operation.
 
 import csv
 import time

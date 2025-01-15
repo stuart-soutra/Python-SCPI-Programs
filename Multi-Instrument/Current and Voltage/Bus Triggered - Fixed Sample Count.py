@@ -1,4 +1,23 @@
-#!/usr/bin/env python3
+#----------Current and Voltage Measurement - Bus Triggered - Fixed Sample Count----------#
+#
+#
+#
+#
+#   - Author: Stuart Thomas
+#   - Date: 15/01/2025
+#   - Version: 1.0
+#   - Description: - This program sets up DC current and voltage measurements on a Keysight 34460A. Settings are shown below...
+#                  - Default Settings:
+#                       - Trigger source: BUS
+#                       - Default number of readings: 2000          User selectable - change 'user_num_cycles' variable
+#                       - Fs = 100Hz                                User selectable - change 'fs' variable
+#                       - Results transferred to a .csv file upon reading completion
+#                  - Equipment required (all must be LXI/VISA capable)::
+#                       - Keysight 34460A DMM  (default)
+#                       - Oscilloscope - Keysight DSOX2004A 4-Channel Scope used by default
+#                  - File structure/Pre-requisites:
+#                       - DO NOT DELETE 'test_numbers.txt' file     -       file stores the current test result number
+#                       - All test results are saved to the relative directory
 
 import csv
 import time

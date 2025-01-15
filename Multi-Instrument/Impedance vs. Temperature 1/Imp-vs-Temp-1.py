@@ -1,3 +1,27 @@
+#----------Impedance vs. Temperature Measurement----------#
+#
+#
+#
+#
+#   - Author: Stuart Thomas
+#   - Date: 15/01/2025
+#   - Version: 1.0
+#   - Description: - Program monitors thermocouple temperature (using DMM in temp mode). 
+#                  - A lab oven with controllable temperature profile was used to ramp up temperature.
+#                  - For every increase in temperature from 30 Degrees Centigrade to 600 Degrees Centigrade, the LCR meter takes a swept impedance measurement (Cp-Rp)
+#                    across the following frequencies: 20Hz, 100Hz, 1kHz, 10kHz, 100kHz, 1MHZ, 2MHz.
+#                  - Each sweep measurement and the corresponding temperature is output to a .csv file.
+
+#                   Default instrument 1: Keysight E4980A LCR Meter
+#                   Default instrument 2: Keithley DMM6500 DMM
+
+#                   Hardware setup:
+#                       - Connect measurement default probe to LCR meter front panel inputs
+#                       - Connect K-Type thermocouple to DMM + and - (or corresponding thermocouple inputs)
+#                       - Connect LCR probe to sample
+#                       - Attach K-Type thermocouple to sample
+#                       - If using oven - custom fixture may be required to connect LCR probe and thermocouple to sample
+
 
 import pyvisa
 import csv

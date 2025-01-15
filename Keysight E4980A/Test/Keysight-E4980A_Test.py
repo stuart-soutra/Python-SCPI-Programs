@@ -1,4 +1,12 @@
-
+#----------Keysight E4980A LCR Meter - Test----------#
+#
+#
+#
+#
+#   - Author: Stuart Thomas
+#   - Date: 15/01/2025
+#   - Version: 1.0
+#   - Description: - Program tests connection and impedance reading setup from the meter.
 
 import pyvisa
 

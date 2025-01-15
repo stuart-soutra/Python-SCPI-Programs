@@ -1,4 +1,22 @@
-#!/usr/bin/env python3
+#----------Keysight 34460A - Current Measurement - Bus Triggered - Fixed Sample Count----------#
+#
+#
+#
+#
+#   - Author: Stuart Thomas
+#   - Date: 14/01/2025
+#   - Version: 1.0
+#   - Description: - This program sets up DC current measurements on a Keysight 34460A. Settings are shown below...
+#                  - Default Settings:
+#                       - Trigger source: BUS
+#                       - Default number of readings: 2000          User selectable - change 'user_num_cycles' variable
+#                       - Fs = 100Hz                                User selectable - change 'fs' variable
+#                       - Results transferred to a .csv file upon reading completion
+#                  - Equipment Required:
+#                       - Keysight 34460A DMM  (default)
+#                  - File structure/Pre-requisites:
+#                       - DO NOT DELETE 'test_numbers.txt' file     -       file stores the current test result number
+#                       - All test results are saved to the relative directory
 
 import csv
 import time

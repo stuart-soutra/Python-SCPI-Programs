@@ -1,10 +1,13 @@
-#import pyvisa
-#rm = pyvisa.ResourceManager()
-#rm.list_resources()
-#scope = rm.open_resource('USB0::0x0699::0x0368::C033702::INSTR')
-#print(scope.query("*IDN?"))
-#print(scope.query("MEASUREMENT:MEAS2:TYPE?"))
-#input()
+#----------Tektronix TBS1072B Oscilloscope Voltage Amplitude Measurement with Logging----------#
+#
+#
+#
+#
+#   - Author: Stuart Thomas
+#   - Date: 15/01/2025
+#   - Version: 1.0
+#   - Description: - Program continuously takes voltage amplitude readings and writes them to a csv file in relative folder.
+#                  - Sample rate is adjustable by changing line in code marked '####' - not intended for high-speed measurements
 
 
 
@@ -41,7 +44,7 @@ def main():
 
             # Wait for next reading
             elapsed_time = time.time() - start_time
-            time.sleep(max(0, 0.1 - elapsed_time))  # Ensure 10 readings per second
+            time.sleep(max(0, 0.1 - elapsed_time))                                              #### Ensure 10 readings per second - vary this to vary sample rate
 
     except KeyboardInterrupt:
         print("Script terminated by user.")

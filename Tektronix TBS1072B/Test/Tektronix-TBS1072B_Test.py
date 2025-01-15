@@ -1,3 +1,13 @@
+#----------Tektronix TBS1072B Oscilloscope Test----------#
+#
+#
+#
+#
+#   - Author: Stuart Thomas
+#   - Date: 15/01/2025
+#   - Version: 1.0
+#   - Description: - Program tests connection to a Tektronix TBS1072B Oscilloscope
+
 import pyvisa
 rm = pyvisa.ResourceManager()
 rm.list_resources()

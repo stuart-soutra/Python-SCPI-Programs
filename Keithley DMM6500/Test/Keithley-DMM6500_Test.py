@@ -1,3 +1,14 @@
+#----------Keithley DMM6500 - Test----------#
+#
+#
+#
+#
+#   - Author: Stuart Thomas
+#   - Date: 15/01/2025
+#   - Version: 1.0
+#   - Description: - Setup test for Keithley DMM6500
+#                  - Commented out lines at the top of code are from PyVISA Landing Page
+
 #import pyvisa
 #rm = pyvisa.ResourceManager()
 #rm.list_resources()
