@@ -1,40 +1,19 @@
-#----------Impedance vs. Temperature 1----------#
-#
-#
-#
-#
-#   - Author: Stuart Thomas
-#   - Date: 07/05/2024
-#   - Version: 1.0
-#   - Description: Program monitors thermocouple temperature (using DMM in temp mode). For every increase in temperature from 30 Degrees Centigrade to 600 Degrees Centigrade, the LCR meter takes a swept impedance 
-#                  measurement (Cp-Rp) across the following frequencies: 20Hz, 100Hz, 1kHz, 10kHz, 100kHz, 1MHZ, 2MHz. Each sweep measurement and the corresponding temperaute is output to a .csv file.
-#                  The program also calculated the loss tangent (tD) and permitivit
-
 
 import pyvisa
 import csv
 import time
 import math
 
-# Header and description
-print("----------IMPEDANCE VS. TEMPERATURE----------")
-print("v1.0\n\n")
-print("This program controls an LCR meter, given a temperature input reading from a DMM.")
-print("For each 1 Degrees Centigrade increase (between 30 Degrees C and 600 Degrees C), the LCR meter will take an impedance measurement (in CP-RP mode).")
-print("The software then calculates the Dielectric Loss Tangent (tD) and Permittivity.")
-print("All results are stored in a .csv file at the following location: 'C:\\Temp\\impVsTemp.csv'    (Please create the 'Temp' folder manually before first run.\n\n\n\n")
-print("Beginning setup...\n")
-
 # Connect to the Keysight E4980 LCR Meter
 rm = pyvisa.ResourceManager()
 print("Pyvisa resource opened...")
-lcr = rm.open_resource('TCPIP0::K-E4980A-22227.local::inst0::INSTR')    # Open LCR Meter
+lcr = rm.open_resource('TCPIP0::10.0.0.11::INSTR')    # Open LCR Meter
 print("Connected to LCR meter...")
-dmm = rm.open_resource('TCPIP0::169.254.224.54::inst0::INSTR')         # Open DMM
+dmm = rm.open_resource('TCPIP0::10.0.0.10::INSTR')         # Open DMM
 print("Connected to DMM...")
 
 # Create CSV file for logging
-filePath = "C:\\Temp\\impVsTemp.csv"
+filePath = "/home/napierats/Documents/Automated Test System/SCPI Programs/Imp-vs-temp/results.csv"
 
 csv_file = open(filePath, "w", newline='')
 csv_writer = csv.writer(csv_file)
