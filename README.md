@@ -75,7 +75,7 @@ I have written some form of program for the following list of instruments:
 - If using a number of instruments via. LAN/LXI, change all of the IP addresses to static (e.g. 10.0.0.x) and keep track of these.
 I have tried to keep any multi-instrument programs to a 10.0.0.x subnet, but you will have to modify these in each program.
 - Although most manufacturers offer SCPI command reference manuals for their products, there can be some differences
-in the way the each instrument interpates certain commands, so switching manufacturer may require some further debugging when
+in the way the each instrument interprets certain commands, so switching manufacturer may require some further debugging when
 porting commands
 - Default to specifying a termination character when sending SCPI query messages. Although some instruments do not require it,
 I have had issues with some when I have not specified this (I'm looking at you AimTTI!!).
