@@ -4,8 +4,11 @@
 #
 #
 #   - Author: Stuart Thomas
-#   - Date: 14/01/2025
-#   - Version: 1.0
+#   - Date: 17/01/2025
+#   - Version: 1.1
+#    - Changelog: 1.0 -> 1.1
+#          - Added 'cDataBuffer' definition to allow user to store more samples - size is defined as 5 samples greater than  'num_samples'
+#          - Change aperture setting from 'VOLT' to 'CURR'
 #   - Description: - Program takes digitized current readings on a Keithley DMM6500, using an external trigger to begin the readings.
 #		   - Users can specify the sample rate and number of samples to read.
 #		   - Output data is stored as a .csv file with each entry being a double precision float.
@@ -58,6 +61,7 @@ print("\n\n")
 
 # Prompt user to set number of samples
 num_samples = int(input("Please enter the desired number of samples to be acquired (between 1 and 100000): "))
+buffer_size = num_samples + 5                                           # Make buffer size slightly larger than number of samples to be collected
 print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
 def main():
@@ -68,8 +72,13 @@ def main():
     # Setup DMM for voltage measurements
     dmm.write("*RST")
     dmm.write(":DIG:FUNC 'CURR'")					   # Digitize mode - current measurements
+
+    # Set buffer name and size
+    dmm.write(f":TRACE:MAKE 'cDataBuffer', {buffer_size}")
+
+    # Set digitize parameters
     dmm.write(f":DIG:CURR:SRATE {sample_rate}")				# Digitize mode - sample rate
-    dmm.write(":DIG:VOLT:APER AUTO")					# Digitize mode - auto aperture setting
+    dmm.write(":DIG:CURR:APER AUTO")					# Digitize mode - auto aperture setting
     dmm.write(f":DIG:COUNT {num_samples}")				# Digitize mode - number of samples to take (to be stored in 'defbuffer1')
 
     # Setup trigger
@@ -79,7 +88,7 @@ def main():
     # Setup TriggerFlow Block - 0=IDLE, 1=WAIT, 2=MEASURE/DIGITIZE
     dmm.write(":TRIG:BLOCK:BUFF:CLEAR 1")				# Clear defbuffer1
     dmm.write(":TRIG:BLOCK:WAIT 1, EXT")				# Add 'WAIT' block - make external 'Ext In' break
-    dmm.write(f":TRIG:BLOCK:MDIG 2, 'defbuffer1', {num_samples}")	        # Add 'MDIG' block - store digitized measurement in 'defbuffer1'
+    dmm.write(f":TRIG:BLOCK:MDIG 2, 'cDataBuffer', {num_samples}")	        # Add 'MDIG' block - store digitized measurement in 'defbuffer1'
 
     # Initilise DMM - wait for external trigger
     dmm.write("INIT")
@@ -88,12 +97,12 @@ def main():
 
     # Wait for buffer to be full...
     with tqdm(total=num_samples, desc="Readings Taken: ", ncols=100) as pbar:    # Add tqdm prog bar
-        while int(dmm.query(":TRAC:ACTUAL?")) < num_samples:
-            current_sample = int(dmm.query(":TRAC:ACTUAL?"))
+        while int(dmm.query(":TRAC:ACTUAL? 'cDataBuffer'")) < num_samples:
+            current_sample = int(dmm.query(":TRAC:ACTUAL? 'cDataBuffer'"))
             pbar.update(current_sample - pbar.n)
 
     # Read buffer
-    c_data = dmm.query(f":TRAC:DATA? 1, {num_samples}, 'defbuffer1', READ")
+    c_data = dmm.query(f":TRAC:DATA? 1, {num_samples}, 'cDataBuffer', READ")
     c_data_floats = parse_data(c_data)					# Convert multi-row string into single row float for each element
 
     # Create CSV file for logging

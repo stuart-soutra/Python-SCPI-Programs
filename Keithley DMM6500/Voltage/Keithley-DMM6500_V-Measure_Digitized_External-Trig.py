@@ -4,8 +4,10 @@
 #
 #
 #   - Author: Stuart Thomas
-#   - Date: 14/01/2025
-#   - Version: 1.0
+#   - Date: 17/01/2025
+#   - Version: 1.1
+#   - Changelog: 1.0 -> 1.1
+#          - Added 'vDataBuffer' definition to allow user to store more samples - size is defined as 5 samples greater than  'num_samples'
 #   - Description: - Program takes digitized voltage readings on a Keithley DMM6500, using an external trigger to begin the readings.
 #		   - Users can specify the sample rate and number of samples to read.
 #		   - Output data is stored as a .csv file with each entry being a double precision float.
@@ -27,8 +29,8 @@ print("-------------------------------------------------------------------------
 print("-------------------------------------------------------------------------------------")
 print("\n")
 print("    - Author: Stuart Thomas")
-print("    - Date: 14/01/2025")
-print("    - Version: 1.0")
+print("    - Date: 17/01/2025")
+print("    - Version: 1.1")
 print("    - Description:")
 print("        - Program takes digitized voltage readings on a Keithley DMM6500, using an external trigger to begin the readings.")
 print("        - Users can specify the sample rate and number of samples to read.")
@@ -58,8 +60,10 @@ sample_rate = int(input("Please enter the desired sample rate (between 1000Hz an
 print("\n\n")
 
 # Prompt user to set number of samples
-num_samples = int(input("Please enter the desired number of samples to be acquired (between 1 and 100000): "))
+num_samples = int(input("Please enter the desired number of samples to be acquired (between 1 and 1000000): "))
+buffer_size = num_samples + 5                                           # Make buffer size slightly larger than number of samples to be collected
 print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+
 
 def main():
     # Connect to the Keithley DMM6500
@@ -69,6 +73,11 @@ def main():
     # Setup DMM for voltage measurements
     dmm.write("*RST")
     dmm.write(":DIG:FUNC 'VOLT'")					# Digitize mode - voltage measurements
+
+    # Set buffer name and size
+    dmm.write(f":TRACE:MAKE 'vDataBuffer', {buffer_size}")
+
+    # Set digitize parameters
     dmm.write(f":DIG:VOLT:SRATE {sample_rate}")				# Digitize mode - sample rate
     dmm.write(":DIG:VOLT:APER AUTO")					# Digitize mode - auto aperture setting
     dmm.write(f":DIG:COUNT {num_samples}")				# Digitize mode - number of samples to take (to be stored in 'defbuffer1')
@@ -80,7 +89,7 @@ def main():
     # Setup TriggerFlow Block - 0=IDLE, 1=WAIT, 2=MEASURE/DIGITIZE
     dmm.write(":TRIG:BLOCK:BUFF:CLEAR 1")				# Clear defbuffer1
     dmm.write(":TRIG:BLOCK:WAIT 1, EXT")				# Add 'WAIT' block - make external 'Ext In' break
-    dmm.write(f":TRIG:BLOCK:MDIG 2, 'defbuffer1', {num_samples}")	        # Add 'MDIG' block - store digitized measurement in 'defbuffer1'
+    dmm.write(f":TRIG:BLOCK:MDIG 2, 'vDataBuffer', {num_samples}")	        # Add 'MDIG' block - store digitized measurement in 'defbuffer1'
 
     # Initilise DMM - wait for external trigger
     dmm.write("INIT")
@@ -89,12 +98,12 @@ def main():
 
     # Wait for buffer to be full...
     with tqdm(total=num_samples, desc="Readings Taken: ", ncols=100) as pbar:    # Add tqdm prog bar
-        while int(dmm.query(":TRAC:ACTUAL?")) < num_samples:
-            current_sample = int(dmm.query(":TRAC:ACTUAL?"))
+        while int(dmm.query(":TRAC:ACTUAL? 'vDataBuffer'")) < num_samples:
+            current_sample = int(dmm.query(":TRAC:ACTUAL? 'vDataBuffer'"))
             pbar.update(current_sample - pbar.n)
 
     # Read buffer
-    v_data = dmm.query(f":TRAC:DATA? 1, {num_samples}, 'defbuffer1', READ")
+    v_data = dmm.query(f":TRAC:DATA? 1, {num_samples}, 'vDataBuffer', READ")
     v_data_floats = parse_data(v_data)					# Convert multi-row string into single row float for each element
 
     # Create CSV file for logging
